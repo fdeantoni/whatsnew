@@ -5,7 +5,7 @@ use pet::*;
 use dog::*;
 
 const GRAVITY: f64 = 9.81;
-
+const FIDO_MASS: f64 = 1.5;
 
 fn main() {
     
@@ -16,9 +16,8 @@ fn main() {
         tasty: true
     };
     // Set the initial weight of Fida. Let's assume that the weight calculation of Fido is very
-    // complex and expensive, but we can use a const block to calculate the weight of Fido during
-    // compile time!
-    let weight = const { 1.5 * GRAVITY };
+    // complex and expensive.
+    let weight = FIDO_MASS * GRAVITY;
     // Build Fido with the specified name, weight, and food it likes.
     let mut fido = Dog::new("Fido", weight, fidobites.clone() );
 

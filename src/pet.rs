@@ -38,11 +38,13 @@ fn buy_food<T: Clone + Display>(food: &T) -> T {
  * from the store (i.e. clone).
  *
  * With the improved bounds in associated type feature in rust 1.79 we can now
- * specify the bounds for the associated type Food in the Pet trait.
+ * specify the bounds for the associated type Food in the Pet trait. For now we
+ * need to specify it separately in the function signature.
  */
 pub fn feed<T>(animal: &mut T, food: &T::Food)
 where
-    T: Pet<Food: Clone>
+    T: Pet,
+    T::Food: Clone,
 {
     let food = buy_food(food);
     println!("Human is feeding {} some {}...", animal.name(), food);

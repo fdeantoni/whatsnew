@@ -26,11 +26,11 @@ fn process_sound(sound: &Sound) -> String {
 impl DogState {
     fn sound(&self) -> String {
         let sound = match self {
-            DogState::Barking(sound) => sound,
-            DogState::Sleeping(sound) => sound,
-            DogState::Running => &Sound::new("Woooooshhhh...")
+            DogState::Barking(sound) => sound.clone(),
+            DogState::Sleeping(sound) => sound.clone(),
+            DogState::Running => Sound::new("Woooooshhhh...")
         };
-        process_sound(sound)
+        process_sound(&sound)
     }
 }
 
