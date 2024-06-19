@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use crate::pet::*;
 
 pub enum DogState {
@@ -51,6 +52,12 @@ pub struct DogFood {
     pub tasty: bool
 }
 
+impl Display for DogFood {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
+}
+
 pub struct Dog {
     name: String,
     weight: f64,
@@ -66,12 +73,12 @@ impl Pet for Dog {
         &self.name
     }
 
-    fn eat(&mut self, food: DogFood) {
+    fn eat(&mut self, food: &DogFood) {
         if food.tasty {
-            println!("Yummy! I love {}!", food.name);
+            println!("{}: Yummy! I love {}!", self.name(), food.name);
             self.weight += food.calories / 100.0;
         } else {
-            println!("I don't like {}!", food.name);
+            println!("{}: Bleh! I don't like {}!", self.name(), food.name);
         }
     }
 

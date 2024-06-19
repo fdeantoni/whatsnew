@@ -9,13 +9,20 @@ const GRAVITY: f64 = 9.81;
 
 fn main() {
     
+    // Specify the type of food that Fido likes to eat.
     let fidobites = DogFood {
         name: "Fido Bites".to_string(),
         calories: 100.0,
         tasty: true
     };
-    let mut fido = Dog::new("Fido", 1.5 * GRAVITY, fidobites.clone() );
+    // Set the initial weight of Fida. Let's assume that the weight calculation of Fido is very
+    // complex and expensive, but we can use a const block to calculate the weight of Fido during
+    // compile time!
+    let weight = const { 1.5 * GRAVITY };
+    // Build Fido with the specified name, weight, and food it likes.
+    let mut fido = Dog::new("Fido", weight, fidobites.clone() );
 
+    // Randomly decide if Fido sees a cat and if the cat attacks.
     let sees_cat = rand::random();
     let cat_attacks = rand::random();
 
@@ -28,20 +35,29 @@ fn main() {
         fido.sleep();
     }
 
+    // Print out the state of Fido and show the noise it's making
     println!("{} is {}: {}", fido.name(), fido.state(), fido.make_sound());
-    println!("{}'s weight is: {}", fido.name(), fido.weight());
-    println!("{} likes to eat {}", fido.name(), fido.eats().name);
-    
+    println!("{}'s starting weight is {} and loves to eat {}", fido.name(), fido.weight(), fido.eats().name);
+
+    // Feed Fido it's favourite food
     feed(&mut fido, &fidobites);
     println!("{}'s weight is now: {}",fido.name(), fido.weight());
 
+    // Feed Fido some Pedigree Chum and see if it likes it.
     let pedigree = DogFood {
-        name: "Pedigree".to_string(),
+        name: "Pedigree Chum".to_string(),
         calories: 200.0,
         tasty: false
     };
     feed(&mut fido, &pedigree);
     println!("{}'s weight is now: {}",fido.name(), fido.weight());
 
-
+    // Fido has found some trash and tries eating it.
+    let trash = DogFood {
+        name: "Trash".to_string(),
+        calories: 0.0,
+        tasty: false
+    };
+    scavange(&mut fido, &trash);
+    println!("{}'s weight is now: {}",fido.name(), fido.weight());
 }
