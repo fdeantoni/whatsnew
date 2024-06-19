@@ -1,3 +1,6 @@
+//! A very simple example of a pet dog that can eat food and change states.
+//! It demonstrates some of the improvements Rust 1.79.0 brings.
+//! [Read more](https://blog.rust-lang.org/2024/06/13/Rust-1.79.0.html)  
 mod pet;
 mod dog;
 
