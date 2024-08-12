@@ -1,32 +1,30 @@
 //! A very simple example of a pet dog that can eat food and change states.
 //! It demonstrates some of the improvements each rust update brings.
-//! [Rust-1.80.0](https://blog.rust-lang.org/2024/06/13/Rust-1.80.0.html)
+//! [Rust-1.80.1](https://blog.rust-lang.org/2024/08/08/Rust-1.80.1.html)
+//! [Rust-1.80.0](https://blog.rust-lang.org/2024/07/25/Rust-1.80.0.html)
 //! [Rust-1.79.0](https://blog.rust-lang.org/2024/06/13/Rust-1.79.0.html)  
 mod pet;
 mod dog;
 
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::LazyLock};
 
-use lazy_static::lazy_static;
 use pet::*;
 use dog::*;
 
 const GRAVITY: f64 = 9.81;
 
-lazy_static! {
-    static ref DOG_FOOD: HashMap<&'static str, DogFood> = {
-        let mut m = HashMap::new();
-        m.insert("Fido Bites", DogFood {
-            name: "Fido Bites".to_string(),
-            calories: 100.0,
-        });
-        m.insert("Pedigree Chum", DogFood {
-            name: "Pedigree Chum".to_string(),
-            calories: 200.0,
-        });
-        m
-    };
-}
+static DOG_FOOD: LazyLock<HashMap<&'static str, DogFood>> = LazyLock::new(|| {
+    let mut m = HashMap::new();
+    m.insert("Fido Bites", DogFood {
+        name: "Fido Bites".to_string(),
+        calories: 100.0,
+    });
+    m.insert("Pedigree Chum", DogFood {
+        name: "Pedigree Chum".to_string(),
+        calories: 200.0,
+    });
+    m
+});
 
 fn main() {
     
