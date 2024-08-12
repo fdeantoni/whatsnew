@@ -20,7 +20,7 @@ pub trait Pet {
     fn name(&self) -> &str;
 
     fn eat(&mut self, food: &Self::Food);
-    fn eats(&self) -> &Self::Food;
+    fn eats(&self) -> &str;
 
     fn state(&self) -> &Self::State;
 

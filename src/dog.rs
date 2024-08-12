@@ -49,7 +49,6 @@ impl std::fmt::Display for DogState {
 pub struct DogFood {
     pub name: String,
     pub calories: f64,
-    pub tasty: bool
 }
 
 impl Display for DogFood {
@@ -58,14 +57,14 @@ impl Display for DogFood {
     }
 }
 
-pub struct Dog {
+pub struct Dog<'a> {
     name: String,
     weight: f64,
-    food: DogFood,
+    food: &'a str,
     state: DogState
 }
 
-impl Pet for Dog {
+impl<'a> Pet for Dog<'a> {
     type Food = DogFood;
     type State = DogState;
 
@@ -74,7 +73,7 @@ impl Pet for Dog {
     }
 
     fn eat(&mut self, food: &DogFood) {
-        if food.tasty {
+        if food.name == self.food {
             println!("{}: Yummy! I love {}!", self.name(), food.name);
             self.weight += food.calories / 100.0;
         } else {
@@ -82,7 +81,7 @@ impl Pet for Dog {
         }
     }
 
-    fn eats(&self) -> &DogFood {
+    fn eats(&self) -> &str {
         &self.food
     }
 
@@ -95,8 +94,8 @@ impl Pet for Dog {
     }
 }
 
-impl Dog {
-    pub fn new(name: &str, weight: f64, food: DogFood) -> Dog {
+impl<'a> Dog<'a> {
+    pub fn new(name: &str, weight: f64, food: &'a str) -> Dog<'a> {
         Dog {
             name: name.to_string(),
             weight,
