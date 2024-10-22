@@ -3,6 +3,87 @@
 This project is a simple toy project to find out and understand all the improvements added by each Rust release.
 
 
+## Major 1.82.0 Updates
+
+Now const floating point operations are possible! Where before the following was necessary:
+```rust
+const GRAVITY: f64 = 9.81;
+fn get_fido_weight() -> f64 {
+    const { 1.5 * GRAVITY }
+}
+```
+Now you can simply do:
+```rust
+const GRAVITY: f64 = 9.81;
+const fn get_fido_weight() -> f64 {
+    1.5 * GRAVITY
+}
+```
+
+Furthermore a lot safety updates:
+* Native syntax for creating raw pointers. Before:
+    ```rust
+    let ptr = std::ptr::addr_of!(p.not_aligned_field);
+    ```
+    After 
+    ```rust
+    let ptr = &raw const p.not_aligned_field;
+    ```
+* Safe items with `unsafe extern`
+* Unsafe attributes to properly mark functions decorated with an unsafe attribute
+* Safely addressing static place expressions. Before:
+    ```rust
+    static mut STATIC_MUT: Type = Type::new();
+    fn main() {
+        let static_mut_ptr = unsafe { 
+            std::ptr::addr_of_mut!(STATIC_MUT) 
+        };
+    }    
+    ```
+    After:
+    ```rust
+    static mut STATIC_MUT: Type = Type::new();
+    fn main() {
+        let static_mut_ptr = &raw mut STATIC_MUT;
+    }
+    ```
+
+There is also a new `use<..>` syntax to define lifetime bounds for opaque types. Before:
+```rust
+trait Captures<T: ?Sized> {}
+impl<T: ?Sized, U: ?Sized> Captures<T> for U {}
+
+struct Ctx<'cx>(&'cx u8);
+
+fn f<'cx, 'a>(
+    cx: Ctx<'cx>,
+    x: &'a u8,
+) -> impl Iterator<Item = &'a u8> + Captures<&'cx ()> {
+    core::iter::once_with(move || {
+        eprintln!("LOG: {}", cx.0);
+        x
+    })
+}
+```
+After
+```rust
+struct Ctx<'cx>(&'cx u8);
+
+fn f<'cx, 'a>(
+    cx: Ctx<'cx>,
+    x: &'a u8,
+) -> impl Iterator<Item = &'a u8> + use<'a,'cx> {
+    core::iter::once_with(move || {
+        eprintln!("LOG: {}", cx.0);
+        x
+    })
+}
+```
+
+The new cargo command `cargo info` was also introduced.
+
+See [Announcing Rust 1.82.0](https://blog.rust-lang.org/2024/10/17/Rust-1.82.0.html)
+
 ## Major 1.81.0 Updates
 
 Stabilization of:

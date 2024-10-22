@@ -1,8 +1,7 @@
 //! A very simple example of a pet dog that can eat food and change states.
 //! It demonstrates some of the improvements each rust update brings.
-//! [Rust-1.80.1](https://blog.rust-lang.org/2024/08/08/Rust-1.80.1.html)
-//! [Rust-1.80.0](https://blog.rust-lang.org/2024/07/25/Rust-1.80.0.html)
-//! [Rust-1.79.0](https://blog.rust-lang.org/2024/06/13/Rust-1.79.0.html)  
+//! [Rust-1.82.0](https://blog.rust-lang.org/2024/10/17/Rust-1.82.0.html)
+//! [Rust-1.81.0](https://blog.rust-lang.org/2024/09/05/Rust-1.81.0.html)
 mod pet;
 mod dog;
 
@@ -26,15 +25,20 @@ static DOG_FOOD: LazyLock<HashMap<&'static str, DogFood>> = LazyLock::new(|| {
     m
 });
 
+// Set the initial weight of Fida. Let's assume that the weight calculation of Fido is very
+// complex and expensive, but we can use a const block to calculate the weight of Fido during
+// compile time!
+const fn get_fido_weight() -> f64 {
+    1.5 * GRAVITY 
+}
+
 fn main() {
     
     // Specify the type of food that Fido likes to eat.
     let fidobites = DOG_FOOD.get("Fido Bites").expect("Fido Bites not found!");
-    // Set the initial weight of Fida. Let's assume that the weight calculation of Fido is very
-    // complex and expensive, but we can use a const block to calculate the weight of Fido during
-    // compile time!
-    let weight = const { 1.5 * GRAVITY };
+
     // Build Fido with the specified name, weight, and food it likes.
+    let weight = get_fido_weight();
     let mut fido = Dog::new("Fido", weight, &fidobites.name );
 
     // Randomly decide if Fido sees a cat and if the cat attacks.
